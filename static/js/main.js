@@ -15,13 +15,23 @@ const radarImg = document.getElementById("radar-img");
 const radarButtons = document.querySelectorAll("#radar [data-mode]");
 
 function showRadarMode(mode) {
-  // TODO(human): show the radar for `mode` (a key of RADAR_MODES).
-  // - point radarImg at RADAR_MODES[mode].src and keep its alt text in sync
-  // - set aria-pressed="true" on the matching button, "false" on the others
+  const { label, src } = RADAR_MODES[mode];
+  radarImg.src = src;
+  radarImg.alt = "Radar chart of Task 1 decision macro-F1 for the eight models " +
+    `across the 13 conditions, ${label} mode.`;
+  // aria-pressed is also what the CSS uses to draw the selected button
+  radarButtons.forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.mode === mode));
+  });
 }
 
 radarButtons.forEach((button) => {
   button.addEventListener("click", () => showRadarMode(button.dataset.mode));
+});
+
+// Fetch the other charts after the page has loaded, so the first switch is instant.
+window.addEventListener("load", () => {
+  Object.values(RADAR_MODES).forEach(({ src }) => { new Image().src = src; });
 });
 
 // ---------------------------------------------------------------------------
