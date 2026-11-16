@@ -4,8 +4,7 @@
   --text: #000;
   --link: #0645ad;
   --border: #ccc;
-  --wrap: 1100px;
-  --prose: 780px;
+  --wrap: 1008px; /* a 960px content column plus 24px padding on each side */
   --sans: "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   color-scheme: light;
@@ -17,7 +16,7 @@ body {
   margin: 0;
   background: #fff;
   color: var(--text);
-  font: 16px/1.6 var(--sans);
+  font: 17px/1.6 var(--sans);
 }
 
 img { display: block; max-width: 100%; height: auto; }
@@ -33,12 +32,6 @@ h2 { margin: 56px 0 14px; font-size: 1.75rem; }
 h3 { margin: 32px 0 10px; font-size: 1.2rem; }
 
 p { margin: 0 0 1em; }
-
-/* running text stays at a readable line length; figures use the full width */
-main p,
-main ul,
-main ol,
-main dl { max-width: var(--prose); }
 
 .list { padding-left: 1.4em; }
 .list li + li { margin-top: 6px; }
@@ -114,7 +107,7 @@ main dl { max-width: var(--prose); }
 figure { margin: 28px 0; }
 figure > a { display: block; cursor: zoom-in; }
 
-figcaption { max-width: 900px; margin-top: 10px; font-size: 0.95rem; }
+figcaption { margin-top: 10px; font-size: 0.95rem; }
 
 .examples {
   display: grid;
@@ -176,7 +169,7 @@ table.results {
 }
 
 .results th,
-.results td { padding: 6px 10px; background: #fff; text-align: center; }
+.results td { padding: 6px 7px; background: #fff; text-align: center; }
 
 .results th { font-weight: 600; }
 .results thead tr.sub th { font-weight: 400; }
@@ -274,7 +267,7 @@ h2 + .split { margin-top: 0; }
   font-size: 0.9rem;
 }
 
-.footer p { max-width: var(--prose); margin: 0 0 6px; }
+.footer p { margin: 0 0 6px; }
 
 /* ------------------------------------------------------------ responsive -- */
 
