@@ -72,14 +72,9 @@
                alt="Overview of the two tasks. Task 1: a user with type 2 diabetes asks whether Rice Pasteles suit them; the model answers not recommended because white rice is a refined, high-glycemic carb, using the recipe's ingredients, nutrition and directions as evidence. Task 2: a user with metabolic syndrome and type 2 diabetes who has turkey and mushrooms chooses among four dishes; B, Turkey Sliders, is best because A, C and D contain processed meat. Arrows between the tasks mark cross-task consistency.">
         </a>
         <figcaption>
-          <b>The two FAM-Bench tasks.</b>
-          <b>Task 1</b> (dish-level suitability): given a recipe and the user's condition, the model labels
-          the dish as recommended, neutral, or not recommended and identifies the ingredients that determine
-          the label (here, white rice for type 2 diabetes).
-          <b>Task 2</b> (comparative ranking): given the user's conditions, available ingredients, and four
-          candidate recipes, the model ranks the candidates (here, B is best because A, C, and D contain
-          processed meat). <b>Cross-task consistency</b> checks whether a model's rankings agree with its
-          own Task 1 labels for the same dishes.
+          <b>The two FAM-Bench tasks.</b> Task 1: does this dish suit the user's condition, and which
+          ingredients decide it? Task 2: which of four candidate dishes is best? Cross-task consistency
+          checks whether a model's rankings agree with its own Task 1 labels.
         </figcaption>
       </figure>
 
@@ -117,37 +112,32 @@
         <div class="tile">
           <p class="tile__stat">46.1 <small>vs</small> 30.3</p>
           <p class="tile__label">Decision vs. rationale macro-F1</p>
-          <p>Averaged over the eight models, baseline decisions score 46.1 (majority class: 20.7), but the
-            ingredients named to justify them score only 30.3.</p>
+          <p>Models often reach a label without naming the ingredients that drive it.</p>
         </div>
         <div class="tile">
           <p class="tile__stat">30.3 <small>&rarr;</small> 52.3</p>
           <p class="tile__label">Rationale macro-F1 with knowledge injection</p>
-          <p>Adding each condition's food lists to the prompt (KI) raises it to 52.3, and to 56.4 together
-            with chain-of-thought (CoT). CoT alone leaves it at 30.0.</p>
+          <p>Each condition's food lists in the prompt help. Chain-of-thought alone does not (30.0).</p>
         </div>
         <div class="tile">
           <p class="tile__stat">29.4&ndash;45.2</p>
           <p class="tile__label">Task 2 top-1 accuracy</p>
-          <p>Across models and modes (random: 25.0). On eligible-dish questions, where only a health score
-            separates the dishes, every model stays near chance (18.3&ndash;29.0).</p>
+          <p>Random ranking scores 25.0.</p>
         </div>
         <div class="tile">
           <p class="tile__stat">69.2 <small>&rarr;</small> 76.1</p>
           <p class="tile__label">Mean cross-task consistency</p>
-          <p>From baseline to CoT&nbsp;+&nbsp;KI, against 50 for random ranking. Only Gemma-4-31B with
-            CoT&nbsp;+&nbsp;KI exceeds 90.</p>
+          <p>Baseline to CoT&nbsp;+&nbsp;KI. Random ranking scores 50.</p>
         </div>
         <div class="tile">
           <p class="tile__stat">+0.2 <small>/</small> &minus;1.3</p>
           <p class="tile__label">Effect of adding the dish photo</p>
-          <p>Change in Task 1 macro-F1 and Task 2 top-1 accuracy for the open-weight models. The photo
-            changes many answers but fixes about as many as it breaks.</p>
+          <p>Task 1 macro-F1 and Task 2 top-1, open-weight models.</p>
         </div>
         <div class="tile">
           <p class="tile__stat">26.5%</p>
           <p class="tile__label">Not-recommended dishes that non-experts recommend</p>
-          <p>Student volunteers recommended them about twice as often as baseline VLMs (14.2%).</p>
+          <p>Baseline VLMs: 14.2%.</p>
         </div>
       </div>
     </div>
@@ -157,17 +147,12 @@
   <section id="benchmark" class="section">
     <div class="wrap">
       <h2 class="headline">Benchmark</h2>
-      <p class="intro">
-        For AI systems to support Food as Medicine, the central question is not what a dish is but whether
-        it suits a specific health condition.
-      </p>
       <div class="text">
         <p>
-          Even a generally healthy dish can be the wrong choice: leafy greens, for example, may need to be
-          limited in advanced chronic kidney disease because of their potassium. FAM-Bench covers 13
-          diet-related health conditions: hypertension, type 2 diabetes, obesity, metabolic syndrome, NAFLD,
-          heart failure, cardiovascular disease, hyperlipidemia, GERD, IBS, stroke, chronic kidney disease,
-          and osteoporosis.
+          A generally healthy dish can still be the wrong choice: leafy greens may need to be limited in
+          advanced chronic kidney disease because of their potassium. FAM-Bench covers 13 conditions:
+          hypertension, type 2 diabetes, obesity, metabolic syndrome, NAFLD, heart failure, cardiovascular
+          disease, hyperlipidemia, GERD, IBS, stroke, chronic kidney disease, and osteoporosis.
         </p>
       </div>
 
@@ -175,39 +160,37 @@
         <div class="tile">
           <p class="tile__eyebrow">Task 1 &middot; 1,500 questions</p>
           <h3>Dish-level suitability</h3>
-          <p>A user has a recipe in mind and asks whether it suits their conditions.</p>
+          <p>Does this recipe suit the user's conditions?</p>
           <dl>
             <dt>Input</dt>
-            <dd>Recipe (title, ingredients, per-serving nutrition), optionally the dish photo, and one or two conditions</dd>
+            <dd>A recipe, optionally its photo, and one or two conditions</dd>
             <dt>Output</dt>
-            <dd><i>Recommend</i>, <i>neutral</i>, or <i>not recommend</i>, plus the ingredients behind the
-              label for each condition</dd>
+            <dd><i>Recommend</i>, <i>neutral</i>, or <i>not recommend</i>, plus the deciding ingredients</dd>
             <dt>Metrics</dt>
-            <dd>Decision macro-F1; rationale macro-F1 against the gold ingredients</dd>
+            <dd>Decision macro-F1; rationale macro-F1</dd>
           </dl>
         </div>
         <div class="tile">
           <p class="tile__eyebrow">Task 2 &middot; 1,000 questions</p>
           <h3>Comparative dish ranking</h3>
-          <p>A user has a few ingredients on hand and must choose among four candidate recipes.</p>
+          <p>Which of four recipes is best, given the ingredients on hand?</p>
           <dl>
             <dt>Input</dt>
-            <dd>Four candidate recipes, one to three co-occurring conditions, and two to four available ingredients</dd>
+            <dd>Four recipes, one to three conditions, two to four available ingredients</dd>
             <dt>Output</dt>
-            <dd>A ranking of the four dishes from most to least suitable</dd>
+            <dd>A ranking of the four dishes</dd>
             <dt>Types</dt>
             <dd>Condition discrimination (450), eligible-dish ranking (300), ingredient coverage (200), combined constraint (50)</dd>
             <dt>Metrics</dt>
-            <dd>Top-1 accuracy; mean reciprocal rank (MRR)</dd>
+            <dd>Top-1 accuracy; MRR</dd>
           </dl>
         </div>
       </div>
 
       <div class="text">
         <p>
-          <b>Cross-task consistency (CTC)</b> asks whether a model's Task 2 ranking agrees with its own Task 1
-          decisions on the same dishes. Both inputs come from the same model, so CTC measures internal
-          coherence independent of the gold labels.
+          <b>Cross-task consistency (CTC)</b> measures whether a model's Task 2 ranking agrees with its own
+          Task 1 decisions on the same dishes.
         </p>
       </div>
 
@@ -215,26 +198,22 @@
       <ol class="steps">
         <li>
           <h4>Collect recipes</h4>
-          <p>1,811 recipes from 39 websites: 17 portals run by medical societies, clinical nutrition programs
-            and public health agencies (1,346 recipes), and 22 food publications (465), spanning 54 national
-            cuisines.</p>
+          <p>1,811 recipes from 39 websites: 17 health-organization portals and 22 food publications.</p>
         </li>
         <li>
           <h4>Encode dietary guidance</h4>
-          <p>A knowledge base lists, for each condition, beneficial foods and foods to limit or avoid,
-            combining nutritionists' dietary notes with published guidance (e.g., AHA, NIH, Harvard Nutrition
-            Source), plus per-serving nutrient limits such as sodium.</p>
+          <p>For each condition, a knowledge base lists beneficial foods, foods to limit or avoid, and
+            per-serving nutrient limits.</p>
         </li>
         <li>
           <h4>Label by rule</h4>
-          <p>Foods to avoid and violated limits take precedence; recommending a dish requires beneficial foods
-            and complete, compliant nutrition data. In Task 2, dishes with no food to avoid rank first, then
-            dishes using all available ingredients, then a rule-based health score.</p>
+          <p>Foods to avoid and violated limits take precedence. A recommendation needs beneficial foods
+            and compliant nutrition data.</p>
         </li>
         <li>
           <h4>Review with nutritionists</h4>
-          <p>Seven nutrition professionals, including three registered dietitians, labeled questions without
-            seeing the gold label. Their feedback led to three revisions of the labeling rules.</p>
+          <p>Seven nutrition professionals labeled questions blind. Their feedback led to three revisions
+            of the rules.</p>
         </li>
       </ol>
 
@@ -244,10 +223,9 @@
                alt="Six-panel statistics figure. (a) Recipe sources: 1,346 from health organizations and 465 from general food publications. (b) Task 1 gold labels: 670 not recommend, 455 recommend, 375 neutral. (c) Task 2 question types: 450 condition discrimination, 300 eligible-dish ranking, 200 ingredient coverage, 50 combined constraint. (d) Recipe cuisines, led by the United States, Italy and Mexico. (e) Ingredient lines per recipe, median 10 for Task 1 and 13 for Task 2. (f) Condition mentions per task.">
         </a>
         <figcaption>
-          <b>FAM-Bench statistics.</b> (a) Sources of the 1,811 recipes. (b) Task 1 gold labels.
-          (c) Task 2 question types. (d) Recipe cuisines, labeled by GPT-5.4 (top 10 shown).
-          (e) Ingredient lines per recipe. (f) Condition mentions per task; a question naming several
-          conditions counts once for each.
+          <b>FAM-Bench statistics.</b> (a) Recipe sources. (b) Task 1 gold labels. (c) Task 2 question
+          types. (d) Recipe cuisines (top 10). (e) Ingredient lines per recipe. (f) Condition mentions
+          per task.
         </figcaption>
       </figure>
 
@@ -263,8 +241,8 @@
             kidney disease and type 2 diabetes?
             <details class="answer">
               <summary>Show the gold answer</summary>
-              <p><b>Not recommend.</b> Type 2 diabetes: basmati rice. Chronic kidney disease: beans (the
-                edamame). A food to limit or avoid for either condition makes the dish not recommended.</p>
+              <p><b>Not recommend.</b> Basmati rice (type 2 diabetes) and edamame (chronic kidney
+                disease).</p>
             </details>
           </figcaption>
         </figure>
@@ -274,12 +252,11 @@
                  alt="A Task 2 question: for obesity, with mushroom and corn on hand, four candidate recipes, each with a photo and ingredient list: A, warm millet, mushroom and spinach salad; B, black bean and mushroom enchilada casserole; C, shrimp, mushroom and asparagus stir fry with couscous; D, sheet-pan portobello fajitas.">
           </div>
           <figcaption>
-            <b>Task 2.</b> Which dish is best for obesity, with mushroom and corn on hand? Scroll through
-            the four options, or <a href="static/images/task2_example.webp">open the full question</a>.
+            <b>Task 2.</b> Which dish is best for obesity, with mushroom and corn on hand?
+            <a href="static/images/task2_example.webp">Open the full question</a>.
             <details class="answer">
               <summary>Show the gold answer</summary>
-              <p><b>B</b>, black bean &amp; mushroom enchilada casserole. This is a condition-discrimination
-                question: the other three options fail the condition check.</p>
+              <p><b>B</b>, black bean &amp; mushroom enchilada casserole.</p>
             </details>
           </figcaption>
         </figure>
@@ -291,21 +268,18 @@
   <section id="results" class="section">
     <div class="wrap">
       <h2 class="headline">Results</h2>
-      <p class="intro">
-        Eight vision-language models, four prompting modes. Decisions outpace the evidence behind them.
-      </p>
       <div class="text">
         <p>
-          We evaluate six open-weight models served with vLLM (Gemma-3-12B, Gemma-3-27B, Gemma-4-31B,
-          Qwen3-VL-8B, Qwen3-VL-32B, Qwen3.5-27B) and two proprietary models (GPT-5.4, Claude Sonnet 4.6).
-          All decode at temperature 0 with hidden thinking disabled.
+          Six open-weight models (Gemma-3-12B, Gemma-3-27B, Gemma-4-31B, Qwen3-VL-8B, Qwen3-VL-32B,
+          Qwen3.5-27B) and two proprietary models (GPT-5.4, Claude Sonnet 4.6), each under four prompting
+          modes.
         </p>
       </div>
       <ul class="modes">
-        <li><b>Baseline</b><span>The model answers directly, relying on its own knowledge of which foods suit each condition.</span></li>
-        <li><b>CoT</b><span>The model reasons through a fixed checklist before answering.</span></li>
-        <li><b>KI</b><span>Knowledge injection: the prompt adds each condition's beneficial and limit-or-avoid food lists.</span></li>
-        <li><b>CoT&nbsp;+&nbsp;KI</b><span>The food lists and the checklist together.</span></li>
+        <li><b>Baseline</b><span>The model answers directly.</span></li>
+        <li><b>CoT</b><span>It reasons through a fixed checklist first.</span></li>
+        <li><b>KI</b><span>The prompt adds each condition's food lists.</span></li>
+        <li><b>CoT&nbsp;+&nbsp;KI</b><span>Both.</span></li>
       </ul>
 
       <figure class="figure">
@@ -343,23 +317,17 @@
           </table>
         </div>
         <figcaption id="cap-main">
-          <b>Main results</b> with text-only input (all values &times;100). Task 1: decision macro-F1 over
-          the three labels and rationale macro-F1 against the gold ingredients. Task 2: top-1 accuracy and
-          MRR. Unanswered or unparsable items count as incorrect. Majority: always <i>not recommend</i>;
-          random: uniform ranking; Mean: average over the eight models. <b>Bold</b>: best mode per model
-          and metric; <span class="key-top">underlined</span>: best value per metric.
+          <b>Main results</b>, text-only input, &times;100. Majority: always <i>not recommend</i>; random:
+          uniform ranking. <b>Bold</b>: best mode per model; <span class="key-top">underlined</span>: best
+          value per metric.
         </figcaption>
       </figure>
 
       <div class="split">
         <div>
           <h3>Results by health condition</h3>
-          <p>Broken down by health condition, decisions are weakest for IBS, osteoporosis, chronic kidney
-            disease and GERD. Knowledge injection halves their gap to the other nine conditions. The
-            buttons above the chart switch the prompting mode.</p>
-          <p class="small">A question counts towards each condition it asks about: each of the 384
-            two-condition questions appears on both of its axes with its single three-way label, and each
-            axis has 132&ndash;150 questions.</p>
+          <p>Decisions are weakest for IBS, osteoporosis, chronic kidney disease and GERD. Knowledge
+            injection halves their gap to the other nine conditions.</p>
         </div>
         <figure class="radar" id="radar">
           <div class="seg" role="group" aria-label="Prompting mode">
@@ -377,12 +345,9 @@
       <div class="split">
         <div>
           <h3>Cross-task consistency</h3>
-          <p>Each Task 2 option is also judged alone with the Task 1 prompt, and CTC is the share of option
-            pairs whose Task 2 order agrees with these decisions. Every model is above the 50 of random
-            ranking, but Gemma-3-12B (54.3&ndash;60.3) ranks almost independently of its own decisions.</p>
-          <p>Knowledge injection makes the two tasks more consistent: a KI mode is the most consistent for
-            every model. Consistency need not follow accuracy: CoT raises GPT-5.4's Task 2 top-1 from 33.3
-            to 38.2 but lowers its CTC from 78.2 to 70.3.</p>
+          <p>Every model is above the 50 of random ranking, and a KI mode is the most consistent for every
+            model. Consistency need not follow accuracy: CoT raises GPT-5.4's Task 2 top-1 from 33.3 to
+            38.2 but lowers its CTC from 78.2 to 70.3.</p>
         </div>
         <figure>
           <div class="table-wrap" role="region" aria-labelledby="cap-ctc" tabindex="0">
@@ -406,9 +371,7 @@
             </table>
           </div>
           <figcaption id="cap-ctc">
-            <b>Cross-task consistency</b>, text-only input, &times;100, pooled over the 1,000 Task 2
-            questions (<i>recommend</i> &gt; <i>neutral</i> &gt; <i>not recommend</i>; pairs with equal
-            decisions are skipped). Random: 50.
+            <b>Cross-task consistency</b>, text-only input, &times;100. Random: 50.
           </figcaption>
         </figure>
       </div>
@@ -419,25 +382,15 @@
   <section id="photos" class="section">
     <div class="wrap">
       <h2 class="headline">Does the dish photo help?</h2>
-      <p class="intro">
-        Adding the photo to the recipe barely moves Task 1 <span class="nw">macro-F1</span> (+0.2) and
-        lowers Task 2 <span class="nw">top-1</span> (&minus;1.3) for the <span class="nw">open-weight</span>
-        models. The proprietary models behave the same way.
-      </p>
       <div class="text">
         <p>
-          We rerun every prompt with two further inputs: <b>photo only</b> (P: dish title and photo, no
-          recipe text) and <b>recipe plus photo</b> (R+P). Compared question by question, the photo changes
-          many answers in both tasks, for open-weight and proprietary models alike, but it fixes about as
-          many as it breaks. It acts as a weakly grounded signal that perturbs text-based decisions rather
-          than correcting them.
+          Barely. Adding the photo to the recipe moves Task 1 <span class="nw">macro-F1</span> by +0.2 and
+          Task 2 <span class="nw">top-1</span> by &minus;1.3 for the open-weight models. The photo changes
+          many answers but fixes about as many as it breaks.
         </p>
         <p>
-          Much of the deciding evidence is also not visible. Only 43.1% of the foods that decide the
-          <i>not recommend</i> questions are visible in the photo, and no photo shows a nutrient limit.
-          Photo-only accuracy follows visibility (68.4% vs. 55.8% with and without a visible deciding food);
-          recipe-only accuracy does not (76.2% vs. 79.6%). Asked to list the ingredients in each photo,
-          models recover 70.0% of the visible ones and 55.9% of the gold rationale ingredients.
+          Much of the evidence is not visible: only 43.1% of the foods that decide the
+          <i>not recommend</i> questions appear in the photo, and no photo shows a nutrient limit.
         </p>
       </div>
 
@@ -447,9 +400,8 @@
                alt="Four bar-chart panels comparing image-only and image-plus-title inputs for the eight models: visible ingredient recall, hidden ingredient recall, rationale ingredient recall, and final cooking method. Adding the dish title raises every score.">
         </a>
         <figcaption>
-          <b>What models read from the dish photo.</b> Each model lists the ingredients and cooking method
-          of every Task 1 dish from its photo, with or without the dish title. <i>Hidden</i>: recipe
-          ingredients the photo does not show; dashed line in (d): majority class.
+          <b>What models read from the dish photo</b>, with and without the dish title. <i>Hidden</i>:
+          recipe ingredients the photo does not show.
         </figcaption>
       </figure>
 
@@ -485,10 +437,8 @@
             </table>
           </div>
           <figcaption id="cap-input">
-            <b>Photo-only and photo-augmented inputs</b>, averaged over the four prompting modes.
-            P: dish title and photo (one per option in Task 2), no recipe text; R: the recipe input of the
-            main table; R+P: both. &Delta;<sub>photo</sub> = R+P &minus; R and
-            &Delta;<sub>recipe</sub> = R+P &minus; P.
+            P: dish title and photo; R: recipe; R+P: both. Averaged over the four prompting modes.
+            &Delta;<sub>photo</sub> = R+P &minus; R; &Delta;<sub>recipe</sub> = R+P &minus; P.
           </figcaption>
         </figure>
       </details>
@@ -499,14 +449,12 @@
   <section id="humans" class="section">
     <div class="wrap">
       <h2 class="headline">Human baseline</h2>
-      <p class="intro">People without nutrition training struggle with these decisions too.</p>
       <div class="split">
         <div>
-          <p>Student volunteers answered 97 held-out Task 1 and 100 Task 2 questions. On Task 1 they reach
-            41.3 decision macro-F1: above the majority class (20.7) but below VLMs given the recipe (48.6).
-            They recommend 26.5% of <i>not recommend</i> dishes, about twice the rate of baseline VLMs
-            (14.2%).</p>
-          <p>On Task 2 they reach 37.0% top-1 accuracy (random 25%), on par with VLMs.</p>
+          <p>Student volunteers answered 97 Task 1 and 100 Task 2 questions. On Task 1 they reach 41.3
+            decision macro-F1, below VLMs given the recipe (48.6), and recommend 26.5% of
+            <i>not recommend</i> dishes, about twice the rate of baseline VLMs (14.2%).</p>
+          <p>On Task 2 they reach 37.0% top-1 accuracy, on par with VLMs.</p>
         </div>
         <figure>
           <a href="static/images/human_vlm.webp">
@@ -514,9 +462,8 @@
                  alt="Bar chart. Task 1 decision macro-F1: non-expert humans 41.3; VLM means 42.5 with the photo, 48.6 with the recipe, 48.8 with recipe plus photo. Task 2 top-1 accuracy: humans 37.0; VLMs 32.7, 35.6 and 34.5.">
           </a>
           <figcaption>
-            <b>Non-expert humans vs. VLMs.</b> Each VLM bar averages eight models and four prompting modes
-            under one input setting. Error bars are 95% CIs for the human scores; dashed lines mark the
-            majority class (Task 1) and random ranking (Task 2).
+            <b>Non-expert humans vs. VLMs.</b> VLM bars average eight models and four prompting modes.
+            Error bars: 95% CIs. Dashed lines: majority class (Task 1) and random ranking (Task 2).
           </figcaption>
         </figure>
       </div>
@@ -545,10 +492,9 @@
 
 <footer class="footer">
   <div class="wrap">
-    <p>FAM-Bench is a research benchmark for evaluating AI systems. Its labels follow general dietary
-      guidance and are not medical advice; ask a clinician or registered dietitian about your own diet.</p>
-    <p>Recipe text and photos belong to their original publishers and appear here only as benchmark
-      examples.</p>
+    <p>FAM-Bench is a research benchmark. Its labels follow general dietary guidance and are not medical
+      advice.</p>
+    <p>Recipe text and photos belong to their original publishers.</p>
   </div>
 </footer>
 

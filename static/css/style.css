@@ -381,7 +381,8 @@ table.results {
   margin-top: 72px;
 }
 
-.intro + .split { margin-top: 40px; }
+.intro + .split,
+.headline + .split { margin-top: 40px; }
 
 .split h3 { margin-bottom: 14px; }
 
